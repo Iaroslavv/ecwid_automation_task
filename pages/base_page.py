@@ -1,10 +1,11 @@
-from selenium.common.exceptions import NoSuchElementException,TimeoutException
+from selenium.common.exceptions import NoSuchElementException,TimeoutException, StaleElementReferenceException
 from selenium.webdriver.support.ui import WebDriverWait
 from pages.locators import SearchPageLocators
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 class BasePage:
-    def __init__(self, browser: str, url: str, timeout=15):
+    def __init__(self, browser: str, url: str, timeout=20):
         """Class constructor.
         :param browser:
         :param url:
@@ -25,7 +26,11 @@ class BasePage:
         """
         self.browser.implicitly_wait(25)
         self.browser.find_element(*SearchPageLocators.SEARCH_TEXT_FIELD).send_keys(input_text)
+    
+    def click_on_search_field_button(self):
+        self.browser.implicitly_wait(5)
         self.browser.find_element(*SearchPageLocators.SEARCH_BUTTON).click()
+        time.sleep(10)
 
     def is_not_element_present(self, how, what, timeout=4):
         """
@@ -43,7 +48,7 @@ class BasePage:
         Checks if element is presented on the page
         """
         try:
-            self.browser.implicitly_wait(20)
+            self.browser.implicitly_wait(10)
             self.browser.find_element(how, what)
         except NoSuchElementException:
             return False
@@ -51,13 +56,14 @@ class BasePage:
     
     def find_items_from_search_results(self, how, what, search_item):
         try:
-            self.browser.implicitly_wait(10)
+            self.browser.implicitly_wait(5)
             items = self.browser.find_elements(how, what)
             list_items = [item.get_attribute("title") for item in items]
+            time.sleep(1)
             lower_list_items = [word.lower() for word in list_items if word.lower()]
             number_items = len(lower_list_items)
             number_search_item = sum((word.count(search_item) for word in lower_list_items))
-        except NoSuchElementException:
+        except (NoSuchElementException, StaleElementReferenceException):
             return False
         print("NUMBER_ITEMS", number_items)
         print("NUMBER_SEARCH_ITEM", number_search_item)
