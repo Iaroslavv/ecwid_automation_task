@@ -2,6 +2,9 @@ from pages.base_page import BasePage
 from pages.locators import SearchPageLocators
 
 class SearchPage(BasePage):
+    """
+    Contains assert methods checking if functionality is working properly.
+    """
     
     def should_be_search_field(self):
         assert self.is_element_present(*SearchPageLocators.SEARCH_TEXT_FIELD), "There's no search field"
@@ -13,3 +16,8 @@ class SearchPage(BasePage):
     def check_search_results(self):
         assert self.is_element_present(*SearchPageLocators.SEARCH_RESULTS), "There aren't any search results"
     
+    def can_click_on_sort_asc_items(self):
+        assert self.click_on_sort_asc_items(*SearchPageLocators.SORT_DROPDOWN_BUTTONS), "There's no radiobutton to sort by asc"
+    
+    def should_be_sorted_items_by_asc(self):
+        assert self.find_sorted_asc_items(*SearchPageLocators.ITEM_PRICE), "The items are not sorted by asc"

@@ -23,6 +23,7 @@ class BasePage:
     def input_text_into_search_field(self, input_text):
         """
         Inputs text into the search field
+        :param input_text:
         """
         self.browser.implicitly_wait(25)
         self.browser.find_element(*SearchPageLocators.SEARCH_TEXT_FIELD).send_keys(input_text)
@@ -30,22 +31,13 @@ class BasePage:
     def click_on_search_field_button(self):
         self.browser.implicitly_wait(5)
         self.browser.find_element(*SearchPageLocators.SEARCH_BUTTON).click()
-        time.sleep(10)
-
-    def is_not_element_present(self, how, what, timeout=4):
-        """
-        Checks if the element's presented on the page. If it appears, the test will fail
-        and vice versa.
-        """
-        try:
-            WebDriverWait(self.browser, timeout).until(EC.presence_of_element_located((how, what)))
-        except TimeoutException:
-            return True
-        return False
+        time.sleep(5)
     
     def is_element_present(self, how, what):
         """
         Checks if element is presented on the page
+        :param how: the way how searching functions
+        :param what: what to look for
         """
         try:
             self.browser.implicitly_wait(10)
@@ -55,6 +47,12 @@ class BasePage:
         return True
     
     def find_items_from_search_results(self, how, what, search_item):
+        """
+        Checks if there are items appeared after clicking on search button
+        :param how: the way how searching functions
+        :param what: what to look for
+        :param search_item: the item(s) needed to be found
+        """
         try:
             self.browser.implicitly_wait(5)
             items = self.browser.find_elements(how, what)
@@ -65,6 +63,38 @@ class BasePage:
             number_search_item = sum((word.count(search_item) for word in lower_list_items))
         except (NoSuchElementException, StaleElementReferenceException):
             return False
-        print("NUMBER_ITEMS", number_items)
-        print("NUMBER_SEARCH_ITEM", number_search_item)
         return number_items == number_search_item
+    
+    def find_sorted_asc_items(self, how, what):
+        """
+        Checks if the items were sorted by asc
+        :param how: the way how searching functions
+        :param what: what to look for
+        """
+        try:
+            self.browser.implicitly_wait(5)
+            item_price = self.browser.find_elements(how, what)
+            list_items_price = [price.text for price in item_price]
+            make_items_float = [float(string.strip('$')) for string in list_items_price]
+        except (NoSuchElementException, StaleElementReferenceException):
+            return False
+        return make_items_float[0] < make_items_float[-1]
+
+    def click_on_sort_asc_items(self, how, what):
+        """
+        Checks if the sorting is working 
+        :param how: the way how searching functions
+        :param what: what to look for
+        """
+        try:
+            self.browser.implicitly_wait(35)
+            sort_drop_down = self.browser.find_element(how, what)
+            self.browser.execute_script("return arguments[0].scrollIntoView(true);", sort_drop_down)
+            time.sleep(2)
+            sort_drop_down.click()
+            find_sort_by_asc = self.browser.find_element(*SearchPageLocators.SORT_ASC_BUTTON)
+            find_sort_by_asc.click()
+            time.sleep(2)
+        except (NoSuchElementException, TimeoutException):
+            return False
+        return True
