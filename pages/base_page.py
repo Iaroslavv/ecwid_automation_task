@@ -40,7 +40,7 @@ class BasePage:
         :param what: what to look for
         """
         try:
-            self.browser.implicitly_wait(10)
+            self.browser.implicitly_wait(15)
             self.browser.find_element(how, what)
         except NoSuchElementException:
             return False
@@ -72,7 +72,7 @@ class BasePage:
         :param what: what to look for
         """
         try:
-            self.browser.implicitly_wait(5)
+            self.browser.implicitly_wait(15)
             item_price = self.browser.find_elements(how, what)
             list_items_price = [price.text for price in item_price]
             make_items_float = [float(string.strip('$')) for string in list_items_price]
