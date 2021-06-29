@@ -10,5 +10,5 @@ class SearchPageLocators:
     SEARCH_RESULTS = (By.CSS_SELECTOR, "div.grid__products")
     SEARCH_ITEMS = (By.CSS_SELECTOR, "div.grid__products>div.grid-product >div.grid-product__wrap>div.grid-product__wrap-inner>a")
     ITEM_PRICE = (By.CSS_SELECTOR, ".grid-product__price-amount >div")
-    SORT_DROPDOWN = (By.CSS_SELECTOR, "#ec-products-sort")
+    SORT_DROPDOWN = (By.XPATH, "//select[@tabindex='-1']")
     SORT_ASC_BUTTON = (By.CSS_SELECTOR,"[value='priceAsc']")
