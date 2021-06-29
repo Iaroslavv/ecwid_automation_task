@@ -89,12 +89,9 @@ class BasePage:
         try:
             self.browser.implicitly_wait(35)
             sort_drop_down = self.browser.find_element(how, what)
-            self.browser.execute_script("return arguments[0].scrollIntoView(true);", sort_drop_down)
-            time.sleep(2)
             sort_drop_down.click()
             find_sort_by_asc = self.browser.find_element(*SearchPageLocators.SORT_ASC_BUTTON)
             find_sort_by_asc.click()
-            time.sleep(2)
         except (NoSuchElementException, TimeoutException):
             return False
         return True
