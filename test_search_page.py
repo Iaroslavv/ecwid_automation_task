@@ -1,17 +1,17 @@
-import pages
 from pages.search_page import SearchPage
+from pages.variables import search_parameters
 import pytest
 
+@pytest.mark.parametrize('domen', ["ru"])
 @pytest.mark.search_field
 class TestSearchField:
     """
     Checks if search field can accept multiple
     string options.
     """
-    
-    @pytest.mark.xfail(reason="it fails because not all results are relevant to the keyword")
-    def test_correct_input_search_field(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
+    @pytest.mark.xfail(reason="not all results're relevant to the keyword")
+    def test_correct_input_search_field(self, browser, domen):
+        link = f"https://www.ecwid.{domen}/demo/search"
         page = SearchPage(browser, link)
         page.open()
         search_item = "dress"
@@ -20,99 +20,20 @@ class TestSearchField:
         page.check_search_results()
         page.check_search_results_contain_keyword(search_item)
 
-    @pytest.mark.xfail(reason="it fails because it's impossible to click on a search icon")
-    def test_empty_input(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
+    @pytest.mark.xfail(reason="it's impossible to click on a search icon")
+    def test_empty_input(self, browser, domen):
+        link = f"https://www.ecwid.{domen}/demo/search"
         page = SearchPage(browser, link)
         page.open()
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    @pytest.mark.xfail(reason="it fails because search doent' find any items with missing letter")
-    def test_missing_letter_input(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "drss"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    @pytest.mark.xfail(reason="it fails because search doent' find any items with extra letter")
-    def test_search_item_with_extra_letter(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "dressg"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    @pytest.mark.xfail(reason="it fails because search doent' find any items with symbol inside")
-    def test_symbol_between_search_items(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "black.dress"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    def test_symbol_at_the_end_search_item(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "dress#"
-        page.input_text_into_search_field(search_item)
         page.click_on_search_field_button()
         page.check_search_results()
 
-    
-    def test_symbol_before_search_item(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
+    @pytest.mark.parametrize("word", search_parameters)
+    def test_search_field_inputs(self, browser, domen, word):
+        link = f"https://www.ecwid.{domen}/demo/search"
         page = SearchPage(browser, link)
         page.open()
-        search_item = "%&dress"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-
-    @pytest.mark.xfail(reason="it fails because search doent' find any items with a letter before \
-                       an item")
-    def test_letter_before_search_item(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "hdress"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    def test_multiple_search_items(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "dress shorts surf woven"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-    
-    
-    def test_plural_search_item(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "dresses"
-        page.input_text_into_search_field(search_item)
-        page.click_on_search_field_button()
-        page.check_search_results()
-
-    
-    def test_synonym_for_search_item(self, browser):
-        link = "https://www.ecwid.ru/demo/search"
-        page = SearchPage(browser, link)
-        page.open()
-        search_item = "shirt"
+        search_item = f"{word}"
         page.input_text_into_search_field(search_item)
         page.click_on_search_field_button()
         page.check_search_results()
