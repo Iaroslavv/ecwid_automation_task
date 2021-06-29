@@ -14,7 +14,7 @@ class SearchPage(BasePage):
         assert self.is_element_present(*SearchPageLocators.SEARCH_RESULTS), "There aren't any search results"
     
     def can_click_on_sort_asc_items(self):
-        assert self.click_on_sort_asc_items(*SearchPageLocators.SORT_DROPDOWN), "There's no radiobutton to sort by asc"
+        assert self.click_on_sort_asc_items(*SearchPageLocators.SORT_DROPDOWN), "There's no dropdown for sorting items"
     
     def should_be_sorted_items_by_asc(self):
         assert self.find_sorted_asc_items(*SearchPageLocators.ITEM_PRICE), "The items are not sorted by asc"
