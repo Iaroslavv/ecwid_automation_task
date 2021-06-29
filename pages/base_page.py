@@ -31,7 +31,6 @@ class BasePage:
     def click_on_search_field_button(self):
         self.browser.implicitly_wait(5)
         self.browser.find_element(*SearchPageLocators.SEARCH_BUTTON).click()
-        time.sleep(5)
     
     def is_element_present(self, how, what):
         """
@@ -40,7 +39,7 @@ class BasePage:
         :param what: what to look for
         """
         try:
-            self.browser.implicitly_wait(15)
+            self.browser.implicitly_wait(20)
             self.browser.find_element(how, what)
         except NoSuchElementException:
             return False
@@ -57,7 +56,6 @@ class BasePage:
             self.browser.implicitly_wait(5)
             items = self.browser.find_elements(how, what)
             list_items = [item.get_attribute("title") for item in items]
-            time.sleep(1)
             lower_list_items = [word.lower() for word in list_items if word.lower()]
             number_items = len(lower_list_items)
             number_search_item = sum((word.count(search_item) for word in lower_list_items))
