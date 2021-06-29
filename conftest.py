@@ -19,6 +19,7 @@ def browser(request):
         options.add_argument("--remote-debugging-port=9222")
         options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
         browser = webdriver.Chrome(options=options)
+        browser.maximize_window()
     else:
         raise pytest.UsageError("--browser_name should be chrome")
     yield browser
