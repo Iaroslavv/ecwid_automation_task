@@ -3,7 +3,7 @@ from pages.locators import SearchPageLocators
 
 class SearchPage(BasePage):
     """
-    Contains assert methods checking if functionality is working properly.
+    Contains assert methods checking if functionality is working properly...
     """
     
     def check_search_results_contain_keyword(self, search_item):
